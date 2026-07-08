@@ -1,0 +1,80 @@
+// Peak Performance — Prisma schema
+// Provider: PostgreSQL via Supabase. DATABASE_URL is the pooled connection
+// (PgBouncer, port 6543, ?pgbouncer=true) that the running app uses at
+// request time. DIRECT_URL is the unpooled connection (port 5432) that
+// `prisma migrate` needs — PgBouncer's transaction pooling mode doesn't
+// support the prepared statements migrations rely on, so migrations must
+// bypass it. Both values come from Supabase: Project Settings -> Database
+// -> Connection string (URI tab has both variants).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum BFMethod {
+  dexa
+  bodpod
+  clinical_caliper_3site
+  consumer_scale
+  visual_estimate
+  other_unverified
+}
+
+enum FuelingPhilosophy {
+  strict_daily
+  weekly_net
+}
+
+enum TdeeSource {
+  apple_watch
+  step_estimate
+  bmr_only
+}
+
+enum SessionType {
+  rest
+  recovery
+  moderate
+  heavy
+  game
+}
+
+// Single-user app (v1). One row, created at onboarding.
+model AthleteProfile {
+  id                 String            @id @default(cuid())
+  weightKg           Float
+  heightCm           Float
+  age                Int
+  sex                String // "male" | "female" — used only for Mifflin-St Jeor constant
+  bodyFatPercent     Float?
+  bodyFatMethod      BFMethod?
+  seasonStartDate    DateTime // required — Decision #8 depends on this existing
+  fuelingPhilosophy  FuelingPhilosophy @default(strict_daily)
+  decision1ReviewedAt DateTime? // set when user acknowledges the Review Decision #1 banner
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+// One row per logged day: training, TDEE input, resulting targets, actuals.
+model DailyLog {
+  id                String      @id @default(cuid())
+  date              DateTime    @unique @db.Date
+  sessionType       SessionType
+  tdeeEstimateKcal  Float
+  tdeeSource        TdeeSource
+  activeCaloriesKcal Float?     // raw device number, if any — kept for audit trail
+  bodyWeightKg      Float?      // morning weigh-in, optional per day
+  carbGramsTarget   Float?      // computed target for the day (strict_daily path)
+  carbGramsActual   Float?      // what was actually logged/eaten
+  proteinGramsTarget Float?
+  fatGramsTarget    Float?
+  recoveryScore     Float?      // 1-10 subjective/device recovery score, optional
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}

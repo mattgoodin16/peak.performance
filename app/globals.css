@@ -1,0 +1,100 @@
+:root {
+  --bg: #0b0d10;
+  --panel: #14171c;
+  --border: #262b33;
+  --text: #e8eaed;
+  --muted: #9aa3af;
+  --accent: #4f8dff;
+  --warn: #e0a72e;
+  --danger: #e05252;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+}
+
+.app-shell {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+nav.top-nav {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+nav.top-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+nav.top-nav a.active { color: var(--text); font-weight: 600; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.banner {
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.banner.season { background: #2a2210; border: 1px solid var(--warn); }
+.banner.variance { background: #2a1810; border: 1px solid var(--warn); }
+.banner.cap { background: #241010; border: 1px solid var(--danger); }
+.banner.info { background: #10202a; border: 1px solid var(--accent); }
+
+label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+
+input, select, button {
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #1a1e24;
+  color: var(--text);
+  width: 100%;
+}
+
+button {
+  background: var(--accent);
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  width: auto;
+  padding: 10px 18px;
+  margin-top: 16px;
+}
+
+button:hover { opacity: 0.9; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-weight: 600; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.stat { background: #1a1e24; border-radius: 8px; padding: 12px; }
+.stat .label { color: var(--muted); font-size: 12px; }
+.stat .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+.stat .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+.error-text { color: var(--danger); font-size: 13px; margin-top: 8px; }
